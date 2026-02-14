@@ -5,14 +5,14 @@
     <title>表情包生成器-修复版</title>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <style>
-        body { background: #000; display: flex; flex-direction: column; align-items: center; color: white; padding-top: 20px; }
+        body { background: #fff; display: flex; flex-direction: column; align-items: center; color: white; padding-top: 20px; }
         
         /* 截图区域 */
         #capture { 
             position: relative; 
             width: 400px; 
             height: 450px; 
-            background: #000; 
+            background: #fff; 
             overflow: hidden;
         }
 
@@ -91,7 +91,7 @@
             btn.disabled = true;
 
             html2canvas(document.getElementById('capture'), {
-                backgroundColor: "#000",
+                backgroundColor: "#ffffff",
                 useCORS: true,
                 scale: 2,
                 // 强制等待图片加载
