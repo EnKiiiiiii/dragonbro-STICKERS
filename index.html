@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>表情包生成器</title>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        body { background: #000; display: flex; flex-direction: column; align-items: center; color: white; padding-top: 20px; }
+        
+        /* 截图区域容器 */
+        #capture { 
+            position: relative; 
+            width: 400px; 
+            height: 450px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #000; /* 确保下载的图片背景是黑色的 */
+        }
+
+        .bubble {
+            position: absolute;
+            /* 2. 这里的 top 和 left 按照你的需求往右下调了一点 */
+            top: 40px; 
+            left: 200px; 
+            transform: translateX(-20%);
+            min-width: 80px; 
+            max-width: 250px; 
+            padding: 10px 20px;
+            z-index: 10;
+            border: 30px solid transparent; 
+            border-image-source: url('sticker_babbo.png');
+            border-image-slice: 40 fill; 
+            border-image-repeat: stretch;
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            word-wrap: break-word;
+        }
+
+        .star-body {
+            position: absolute;
+            bottom: 20px;
+            width: 320px;
+            z-index: 1;
+        }
+
+        .controls { margin-top: 30px; background: #222; padding: 20px; border-radius: 10px; }
+        input { padding: 12px; width: 200px; border-radius: 4px; border: none; font-size: 16px; }
+        button { padding: 12px 20px; cursor: pointer; background: #ffeb3b; border: none; border-radius: 4px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="capture">
+        <div class="bubble" id="text-output">请输入文字</div>
+        <img src="sticker_star.png" class="star-body">
+    </div>
+
+    <div class="controls">
+        <input type="text" id="text-input" placeholder="输入文案 (1-20字)" maxlength="20">
+        <button id="save-btn">保存图片</button>
+    </div>
+
+    <script>
+        const input = document.getElementById('text-input');
+        const output = document.getElementById('text-output');
+        
+        input.oninput = () => {
+            output.innerText = input.value || "请输入文字";
+        };
+
+        // 3. 真正的下载逻辑
+        document.getElementById('save-btn').onclick = () => {
+            const captureArea = document.getElementById('capture');
+            
+            // 增加一个简单的点击反馈
+            console.log("正在尝试生成图片..."); 
+        
+            html2canvas(captureArea, {
+                backgroundColor: "#000",
+                useCORS: true, // 允许跨域
+                allowTaint: true, // 允许加载本地未受保护的图片
+                scale: 2 // 提高清晰度
+            }).then(canvas => {
+                try {
+                    const link = document.createElement('a');
+                    link.download = 'my_sticker.png';
+                    link.href = canvas.toDataURL('image/png');
+                    document.body.appendChild(link); // 兼容某些浏览器
+                    link.click();
+                    document.body.removeChild(link);
+                    console.log("下载指令已发出");
+                } catch (err) {
+                    console.error("图片转换失败:", err);
+                    alert("由于浏览器安全限制，本地预览时无法保存。请尝试将文件上传到服务器或使用极速浏览器（如 Chrome）尝试。");
+                }
+            }).catch(err => {
+                console.error("截图插件运行出错:", err);
+            });
+        };
+    </script>
+</body>
+</html>
